@@ -25,7 +25,7 @@ class Home extends HTMLElement {
       }
       .nav-link:hover {
         color: #fff;
-        background-color: pink;
+        background-color: black;
       }
       .nav-link.active {
         color: #fff !important;
