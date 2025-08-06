@@ -1,27 +1,32 @@
 class Home extends HTMLElement {
   constructor() {
     super();
-    const shadow = this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: 'open' });
+  }
 
-    // Bootstrap CSS
+  connectedCallback() {
+    this.render();
+  }
+
+  render() {
+    const shadow = this.shadowRoot;
+    shadow.innerHTML = ''; // Limpiar
+
+    // Crear e inyectar estilos
     const bootstrapCSS = document.createElement('link');
-    bootstrapCSS.setAttribute('rel', 'stylesheet');
-    bootstrapCSS.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css');
-    shadow.appendChild(bootstrapCSS);
+    bootstrapCSS.rel = 'stylesheet';
+    bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css';
 
-    // Bootstrap Icons CSS
     const iconsCSS = document.createElement('link');
-    iconsCSS.setAttribute('rel', 'stylesheet');
-    iconsCSS.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css');
-    shadow.appendChild(iconsCSS);
+    iconsCSS.rel = 'stylesheet';
+    iconsCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css';
 
-    // CSS personalizado
     const style = document.createElement('style');
     style.textContent = `
-      /* CSS personalizado */
       .nav-link {
         color: #000;
         transition: color 0.3s, background-color 0.3s;
+        cursor: pointer;
       }
       .nav-link:hover {
         color: #fff;
@@ -32,54 +37,62 @@ class Home extends HTMLElement {
         background-color: red !important;
       }
     `;
-    shadow.appendChild(style);
 
-    // Contenedor con estructura HTML
+    // Crear HTML
     const container = document.createElement('div');
     container.className = "border border-dark container d-flex justify-content-center align-items-center min-vh-100";
     container.innerHTML = `
       <ul class="nav nav-pills flex-column border rounded w-75 p-4 fs-4">
         <li class="nav-item mb-2">
-          <a class="nav-link active py-3" aria-current="page" href="#">
-            <i class="bi bi-house-door-fill"></i> Inicio
-          </a>
+          <a class="nav-link py-3" data-link="/" href="#"><i class="bi bi-house-door-fill"></i> Inicio</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" href="#">
-            <i class="bi bi-people-fill"></i> Usuarios
-          </a>
+          <a class="nav-link py-3" data-link="/usuarios" href="#"><i class="bi bi-people-fill"></i> Usuarios</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" href="#">
-            <i class="bi bi-building-fill"></i> Departamentos
-          </a>
+          <a class="nav-link py-3" data-link="/departamentos" href="#"><i class="bi bi-building-fill"></i> Departamentos</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" href="#">
-            <i class="bi bi-box-fill"></i> Productos
-          </a>
+          <a class="nav-link py-3" data-link="/productos" href="#"><i class="bi bi-box-fill"></i> Productos</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" href="#">
-            <i class="bi bi-box-arrow-in-right"></i> Salir
-          </a>
+          <a class="nav-link py-3" data-link="/logout" href="#"><i class="bi bi-box-arrow-in-right"></i> Salir</a>
         </li>
       </ul>
     `;
 
+    // Añadir al shadow DOM
+    shadow.appendChild(bootstrapCSS);
+    shadow.appendChild(iconsCSS);
+    shadow.appendChild(style);
     shadow.appendChild(container);
 
-    // EVENTOS DOM
-    const navLinks = container.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
+    // Añadir eventos de navegación
+    const links = container.querySelectorAll('.nav-link');
+    links.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
+        const path = link.getAttribute('data-link');
+        window.navigateTo(path);
+        this.updateActiveLink();
       });
+    });
+
+    this.updateActiveLink();
+  }
+
+  updateActiveLink() {
+    const currentPath = window.location.pathname;
+    const links = this.shadowRoot.querySelectorAll('.nav-link');
+    links.forEach(link => {
+      const path = link.getAttribute('data-link');
+      if (path === currentPath) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
     });
   }
 }
 
-// Registrar el custom element
-window.customElements.define('home-component', Home);
+customElements.define('home-component', Home);

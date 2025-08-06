@@ -1,4 +1,4 @@
-class AboutComponent extends HTMLElement {
+class departamentos extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
       <h1>Acerca de</h1>
@@ -7,4 +7,4 @@ class AboutComponent extends HTMLElement {
   }
 }
 
-customElements.define('about-component', AboutComponent);
+customElements.define('departamentos-component', departamentos);
