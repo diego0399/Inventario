@@ -23,6 +23,28 @@ class Home extends HTMLElement {
 
     const style = document.createElement('style');
     style.textContent = `
+
+      :host {
+        display: block;
+        min-height: 100vh;
+        background-image: url('https://picsum.photos/1920/1080');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      ul.nav {
+        background-color: rgba(255, 255, 255, 0.8); /* fondo claro solo para el menú */
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      }
       .nav-link {
         color: #000;
         transition: color 0.3s, background-color 0.3s;
@@ -40,23 +62,23 @@ class Home extends HTMLElement {
 
     // Crear HTML
     const container = document.createElement('div');
-    container.className = "border border-dark container d-flex justify-content-center align-items-center min-vh-100";
+    container.className = "container d-flex justify-content-center align-items-center min-vh-100";
     container.innerHTML = `
       <ul class="nav nav-pills flex-column border rounded w-75 p-4 fs-4">
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" data-link="/" href="#"><i class="bi bi-house-door-fill"></i> Inicio</a>
+          <a class="nav-link py-3" data-link="/" href="/"><i class="bi bi-house-door-fill"></i> Inicio</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" data-link="/usuarios" href="#"><i class="bi bi-people-fill"></i> Usuarios</a>
+          <a class="nav-link py-3" data-link="/usuarios" href="#/usuarios"><i class="bi bi-people-fill"></i> Usuarios</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" data-link="/departamentos" href="#"><i class="bi bi-building-fill"></i> Departamentos</a>
+          <a class="nav-link py-3" data-link="/departamentos" href="#/departamentos"><i class="bi bi-building-fill"></i> Departamentos</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" data-link="/productos" href="#"><i class="bi bi-box-fill"></i> Productos</a>
+          <a class="nav-link py-3" data-link="/productos" href="#/productos"><i class="bi bi-box-fill"></i> Productos</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" data-link="/logout" href="#"><i class="bi bi-box-arrow-in-right"></i> Salir</a>
+          <a class="nav-link py-3" data-link="/logout" href="#/logout"><i class="bi bi-box-arrow-in-right"></i> Salir</a>
         </li>
       </ul>
     `;
