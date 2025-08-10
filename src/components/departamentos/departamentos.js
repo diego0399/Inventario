@@ -11,7 +11,7 @@ class Departamentos extends HTMLElement {
 
     // Botón regresar
     this.querySelector('#btnRegresar').addEventListener('click', () => {
-      window.location.href = '/';
+      window.location.href = '#/';
     });
 
     // Limpiar modal empleados al cerrarlo
