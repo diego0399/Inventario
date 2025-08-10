@@ -23,7 +23,6 @@ class Home extends HTMLElement {
 
     const style = document.createElement('style');
     style.textContent = `
-
       :host {
         display: block;
         min-height: 100vh;
@@ -41,7 +40,7 @@ class Home extends HTMLElement {
       }
 
       ul.nav {
-        background-color: rgba(255, 255, 255, 0.8); /* fondo claro solo para el menú */
+        background-color: rgba(255, 255, 255, 0.8);
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0,0,0,0.2);
       }
@@ -60,13 +59,12 @@ class Home extends HTMLElement {
       }
     `;
 
-    // Crear HTML
     const container = document.createElement('div');
     container.className = "container d-flex justify-content-center align-items-center min-vh-100";
     container.innerHTML = `
       <ul class="nav nav-pills flex-column border rounded w-75 p-4 fs-4">
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" data-link="/" href="/"><i class="bi bi-house-door-fill"></i> Inicio</a>
+          <a class="nav-link py-3" data-link="/" href="#/"><i class="bi bi-house-door-fill"></i> Inicio</a>
         </li>
         <li class="nav-item mb-2">
           <a class="nav-link py-3" data-link="/usuarios" href="#/usuarios"><i class="bi bi-people-fill"></i> Usuarios</a>
@@ -83,7 +81,6 @@ class Home extends HTMLElement {
       </ul>
     `;
 
-    // Añadir al shadow DOM
     shadow.appendChild(bootstrapCSS);
     shadow.appendChild(iconsCSS);
     shadow.appendChild(style);
@@ -101,10 +98,16 @@ class Home extends HTMLElement {
     });
 
     this.updateActiveLink();
+
+    // También actualiza el link activo si cambia el hash (navegación externa)
+    window.addEventListener('hashchange', () => this.updateActiveLink());
   }
 
   updateActiveLink() {
-    const currentPath = window.location.pathname;
+    // Obtenemos la ruta actual del hash, sin el '#'
+    let currentPath = window.location.hash.slice(1);
+    if (!currentPath) currentPath = '/';
+
     const links = this.shadowRoot.querySelectorAll('.nav-link');
     links.forEach(link => {
       const path = link.getAttribute('data-link');

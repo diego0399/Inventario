@@ -3,10 +3,10 @@ import './src/components/home/home.js';
 import './src/components/departamentos/departamentos.js';
 import { routes } from './src/router/router.js';
 
-// Función global para navegar sin recargar la página
-window.navigateTo = function (url) {
-  history.pushState(null, null, url);
-  window.dispatchEvent(new Event('popstate'));
+// Función global para navegar usando hash
+window.navigateTo = function (hash) {
+  window.location.hash = hash;
+  window.dispatchEvent(new Event('hashchange'));
 };
 
 class App extends HTMLElement {
@@ -17,14 +17,15 @@ class App extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    window.addEventListener('popstate', () => this.render());
+    window.addEventListener('hashchange', () => this.render());
   }
 
   render() {
-    let path = window.location.pathname;
+    // Obtener la ruta del hash, sin el símbolo '#'
+    let path = window.location.hash.slice(1);
 
-    // Normalizar index.html y rutas vacías
-    if (path === '/' || path === '/index.html') {
+    // Normalizar rutas vacías o raíz
+    if (!path || path === '/') {
       path = '/';
     }
 
