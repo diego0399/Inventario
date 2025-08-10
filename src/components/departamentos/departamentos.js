@@ -70,6 +70,7 @@ class Departamentos extends HTMLElement {
     tabla.addEventListener('click', async (e) => {
       const boton = e.target.closest('.ver-empleados');
       const fila = e.target.closest('tr');
+      this.querySelector('#empleadosLabel').textContent = fila.cells[1].innerText;
 
       // Ver empleados
       if (boton) {
@@ -174,7 +175,7 @@ class Departamentos extends HTMLElement {
         <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="empleadosLabel">Empleados del Departamento</h5>
+              <h5 class="modal-title" id="empleadosLabel"></h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
