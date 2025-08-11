@@ -40,7 +40,8 @@ class Departamentos extends HTMLElement {
         dep.departamento,
         gridjs.html(`
           <button 
-            type="button" 
+            type="button"
+            title="${dep.empleados}" 
             class="btn btn-secondary ver-empleados" 
             data-dep-id="${dep.id}">
             <i class="bi bi-eye-fill"></i> Ver
