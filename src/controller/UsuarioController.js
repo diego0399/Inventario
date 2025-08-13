@@ -13,6 +13,11 @@ export class UsuarioController {
     this.viewComponent.listarDepartamentos(departamentos);      // Enviamos los datos a la vista
   }
 
+  async listarEmpleados(){
+    const empleados = await this.modelo.listarEmpleados();    // Llamamos al modelo
+    this.viewComponent.listarEmpleados(empleados); 
+  }
+
   async obtenerEmpleadosPorDepartamento(departamentoId) {
     const empleados = await this.modelo.obtenerEmpleadosPorDepartamento(departamentoId);
     return empleados; // <-- Esta línea es clave

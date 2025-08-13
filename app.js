@@ -1,6 +1,7 @@
 // Importar todos los componentes
 import './src/components/home/home.js';
 import './src/components/departamentos/departamentos.js';
+import './src/components/personas/personas.js';
 import { routes } from './src/router/router.js';
 
 // Función global para navegar usando hash

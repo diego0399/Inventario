@@ -1,6 +1,6 @@
 import { UsuarioController } from '../../controller/UsuarioController.js';
 
-class Departamentos extends HTMLElement {
+class Personas extends HTMLElement {
   constructor() {
     super();
   }
@@ -14,36 +14,32 @@ class Departamentos extends HTMLElement {
       window.location.hash = '/';
     });
 
-    // Limpiar modal empleados al cerrarlo
-    this.querySelector('#empleados').addEventListener('hidden.bs.modal', () => {
-      this.querySelector('#listaEmpleados').innerHTML = '';
-    });
-
     // Cargar departamentos
-    this.controller.listarDepartamentos();
+    this.controller.listarEmpleados();
   }
 
   // 📌 Renderiza departamentos en tabla Grid.js
-  listarDepartamentos(departamentos) {
+  listarEmpleados(empleados) {
   const tabla = this.querySelector('#tabla');
 
-  if (!departamentos?.length) {
-    tabla.innerHTML = '<p>No hay departamentos disponibles.</p>';
+  if (!empleados?.length) {
+    tabla.innerHTML = '<p>No hay empleados disponibles.</p>';
     return;
   }
 
   // Crear Grid
   const grid = new window.gridjs.Grid({
-    columns: ['Código', 'Nombre', 'Empleados'],
-    data: departamentos.map(dep => [
-      dep.codigo,
-      dep.departamento,
+    columns: ['Nombre','Carnet','Departamento', 'Bienes'],
+    data: empleados.map(emp => [
+      emp.nombre,
+      emp.carnet,
+      emp.departamento,
       gridjs.html(`
         <button 
           type="button"
-          title="${dep.empleados}" 
+          title="Bienes" 
           class="btn btn-secondary ver-empleados" 
-          data-dep-id="${dep.id}">
+          data-dep-id="${emp.id}">
           <i class="bi bi-eye-fill"></i> Ver
         </button>
       `)
@@ -88,7 +84,7 @@ class Departamentos extends HTMLElement {
       if (!botonEnFila) return; // Asegura que la fila contiene info útil
 
       const id = Number(botonEnFila.getAttribute('data-dep-id'));
-      const departamento = departamentos.find(dep => dep.id === id);
+      const departamento = empleados.find(emp => emp.id === id);
       if (departamento) {
         this.mostrarModalDepartamento(departamento);
       }
@@ -96,33 +92,12 @@ class Departamentos extends HTMLElement {
   });
 }
 
-
   // 📍 Modal detalle de departamento
   mostrarModalDepartamento(departamento) {
-    this.querySelector('#modalCod').textContent = departamento.codigo;
+    this.querySelector('#modalCod').textContent = departamento.nombre;
     this.querySelector('#modalNombre').textContent = departamento.departamento;
 
     const modal = new bootstrap.Modal(this.querySelector('#miModal'));
-    modal.show();
-  }
-
-  // 👥 Modal empleados del departamento
-  mostrarEmpleadosModal(empleados) {
-    const lista = this.querySelector('#listaEmpleados');
-    lista.innerHTML = '';
-
-    if (!empleados?.length) {
-      lista.innerHTML = '<li class="list-group-item">No hay empleados registrados.</li>';
-    } else {
-      empleados.forEach(emp => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.textContent = `${emp.nombre} - ${emp.puesto}`;
-        lista.appendChild(li);
-      });
-    }
-
-    const modal = new bootstrap.Modal(this.querySelector('#empleados'));
     modal.show();
   }
 
@@ -152,7 +127,7 @@ class Departamentos extends HTMLElement {
       <!-- Contenido principal -->
       <div class="fondo d-flex justify-content-center align-items-center">
         <div class="container text-center">
-          <h1>Departamentos</h1>
+          <h1>Usuarios</h1>
           <div id="tabla" class="my-4"></div>
           <button id="btnRegresar" class="btn btn-secondary">Regresar</button>
         </div>
@@ -177,24 +152,6 @@ class Departamentos extends HTMLElement {
         </div>
       </div>
 
-      <!-- Modal Empleados -->
-      <div class="modal fade" id="empleados" tabindex="-1" aria-labelledby="empleadosLabel" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="empleadosLabel"></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-              <ul id="listaEmpleados" class="list-group"></ul>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Scripts necesarios -->
       <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -202,4 +159,4 @@ class Departamentos extends HTMLElement {
   }
 }
 
-customElements.define('departamentos-component', Departamentos);
+customElements.define('personas-component', Personas);

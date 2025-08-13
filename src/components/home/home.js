@@ -67,7 +67,7 @@ class Home extends HTMLElement {
           <a class="nav-link py-3" data-link="/" href="#/"><i class="bi bi-house-door-fill"></i> Inicio</a>
         </li>
         <li class="nav-item mb-2">
-          <a class="nav-link py-3" data-link="/usuarios" href="#/usuarios"><i class="bi bi-people-fill"></i> Usuarios</a>
+          <a class="nav-link py-3" data-link="/personas" href="#/personas"><i class="bi bi-people-fill"></i> Usuarios</a>
         </li>
         <li class="nav-item mb-2">
           <a class="nav-link py-3" data-link="/departamentos" href="#/departamentos"><i class="bi bi-building-fill"></i> Departamentos</a>
