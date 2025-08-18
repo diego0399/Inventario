@@ -6,8 +6,8 @@ class Departamentos extends HTMLElement {
   }
 
   connectedCallback() {
-    this.innerHTML = this.templateHTML(); //CREA HTML
-    this.controller = new UsuarioController(this); //INSTANCIA CONTROLLER
+    this.innerHTML = this.templateHTML(); // Crea HTML
+    this.controller = new UsuarioController(this); // Instancia controller
 
     // Botón regresar
     this.querySelector('#btnRegresar').addEventListener('click', () => {
@@ -25,77 +25,77 @@ class Departamentos extends HTMLElement {
 
   // 📌 Renderiza departamentos en tabla Grid.js
   listarDepartamentos(departamentos) {
-  const tabla = this.querySelector('#tabla');
+    const tabla = this.querySelector('#tabla');
 
-  if (!departamentos?.length) {
-    tabla.innerHTML = '<p>No hay departamentos disponibles.</p>';
-    return;
-  }
+    if (!departamentos?.length) {
+      tabla.innerHTML = '<p>No hay departamentos disponibles.</p>';
+      return;
+    }
 
-  // Crear Grid
-  const grid = new window.gridjs.Grid({
-    columns: ['Código', 'Nombre', 'Empleados'],
-    data: departamentos.map(dep => [
-      dep.codigo,
-      dep.departamento,
-      gridjs.html(`
-        <button 
-          type="button"
-          title="${dep.empleados}" 
-          class="btn btn-secondary ver-empleados" 
-          data-dep-id="${dep.id}">
-          <i class="bi bi-eye-fill"></i> Ver
-        </button>
-      `)
-    ]),
-    search: true,
-    pagination: { enabled: true, limit: 5 },
-    sort: true,
-    className: {
-      tr: 'gridjs-row-clickable'
-    },
-    language: {
-      search: { placeholder: 'Buscar...' },
-      pagination: {
-        previous: 'Anterior',
-        next: 'Siguiente',
-        showing: 'Mostrando',
-        results: () => 'registros',
+    // Crear Grid
+    const grid = new window.gridjs.Grid({
+      columns: ['Código', 'Nombre', 'Empleados'],
+      data: departamentos.map(dep => [
+        dep.codigo,
+        dep.departamento,
+        gridjs.html(`
+          <button 
+            type="button"
+            title="${dep.empleados} empleado(s)" 
+            class="btn btn-sm btn-primary ver-empleados d-flex align-items-center gap-1"
+            data-dep-id="${dep.id}">
+            <i class="bi bi-eye-fill"></i> Ver (${dep.empleados})
+          </button>
+        `)
+      ]),
+      search: true,
+      pagination: { enabled: true, limit: 5 },
+      sort: true,
+      className: {
+        table: 'table table-hover table-striped align-middle',
+        tr: 'gridjs-row-clickable'
       },
-    },
-  });
+      language: {
+        search: { placeholder: 'Buscar...' },
+        pagination: {
+          previous: 'Anterior',
+          next: 'Siguiente',
+          showing: 'Mostrando',
+          results: () => 'registros',
+        },
+      },
+    });
 
-  grid.render(tabla);
+    grid.render(tabla);
 
-  // Delegación de eventos para botones y filas
-  tabla.addEventListener('click', async (e) => {
-    const boton = e.target.closest('.ver-empleados');
-    const fila = e.target.closest('tr');
+    // Delegación de eventos para botones y filas
+    tabla.addEventListener('click', async (e) => {
+      const boton = e.target.closest('.ver-empleados');
+      const fila = e.target.closest('tr');
 
-    // Ver empleados
-    if (boton) {
-      e.stopPropagation();
-      const id = Number(boton.getAttribute('data-dep-id'));
-      const departamento = departamentos.find(dep => dep.id === id);
-      const empleados = await this.controller.obtenerEmpleadosPorDepartamento(id);
-      this.querySelector('#empleadosLabel').textContent = departamento?.departamento || 'Empleados';
-      return this.mostrarEmpleadosModal(empleados);
-    }
-
-    // Detalle departamento
-    if (fila && fila.tagName === 'TR') {
-      const botonEnFila = fila.querySelector('.ver-empleados');
-      if (!botonEnFila) return; // Asegura que la fila contiene info útil
-
-      const id = Number(botonEnFila.getAttribute('data-dep-id'));
-      const departamento = departamentos.find(dep => dep.id === id);
-      if (departamento) {
-        this.mostrarModalDepartamento(departamento);
+      // Ver empleados
+      if (boton) {
+        e.stopPropagation();
+        const id = Number(boton.getAttribute('data-dep-id'));
+        const departamento = departamentos.find(dep => dep.id === id);
+        const empleados = await this.controller.obtenerEmpleadosPorDepartamento(id);
+        this.querySelector('#empleadosLabel').textContent = departamento?.departamento || 'Empleados';
+        return this.mostrarEmpleadosModal(empleados);
       }
-    }
-  });
-}
 
+      // Detalle departamento
+      if (fila && fila.tagName === 'TR') {
+        const botonEnFila = fila.querySelector('.ver-empleados');
+        if (!botonEnFila) return;
+
+        const id = Number(botonEnFila.getAttribute('data-dep-id'));
+        const departamento = departamentos.find(dep => dep.id === id);
+        if (departamento) {
+          this.mostrarModalDepartamento(departamento);
+        }
+      }
+    });
+  }
 
   // 📍 Modal detalle de departamento
   mostrarModalDepartamento(departamento) {
@@ -117,16 +117,17 @@ class Departamentos extends HTMLElement {
       empleados.forEach(emp => {
         const li = document.createElement('li');
         li.className = 'list-group-item';
-        li.textContent = `${emp.nombre} - ${emp.puesto}`;
+        const h6 = emp.puesto ? ` - <h6 class="d-inline">${emp.puesto}</h6>` : '';
+
+        li.innerHTML = `${emp.nombre}${h6} - ${emp.carnet}`;
         lista.appendChild(li);
       });
     }
-
     const modal = new bootstrap.Modal(this.querySelector('#empleados'));
     modal.show();
   }
 
-  // 🧩 HTML del componente
+  // 🧩 HTML del componente con estilos mejorados
   templateHTML() {
     return `
       <!-- Estilos -->
@@ -136,23 +137,49 @@ class Departamentos extends HTMLElement {
 
       <style>
         .fondo {
-          background: url('https://picsum.photos/1920/1080') center/cover no-repeat;
+          background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://picsum.photos/1920/1080') center/cover no-repeat;
           width: 100%;
           height: 100vh;
         }
+
         .container {
-          background-color: rgba(255, 255, 255, 0.9);
+          background-color: rgba(255, 255, 255, 0.95);
           padding: 2rem;
-          border-radius: 10px;
-          max-width: 800px;
+          border-radius: 12px;
+          max-width: 900px;
           margin: auto;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .gridjs-container {
+          border-radius: 10px;
+          overflow: hidden;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .gridjs-table {
+          font-size: 0.95rem;
+        }
+
+        .gridjs-th {
+          background-color: #f8f9fa;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .modal-title {
+          font-weight: bold;
+        }
+
+        .list-group-item {
+          font-size: 0.95rem;
         }
       </style>
 
       <!-- Contenido principal -->
       <div class="fondo d-flex justify-content-center align-items-center">
         <div class="container text-center">
-          <h1>Departamentos</h1>
+          <h1 class="mb-4">Departamentos</h1>
           <div id="tabla" class="my-4"></div>
           <button id="btnRegresar" class="btn btn-secondary">Regresar</button>
         </div>
