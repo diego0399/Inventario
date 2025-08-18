@@ -154,7 +154,7 @@ class Personas extends HTMLElement {
         }
 
         .gridjs-table {
-          font-size: 0.85rem;
+          font-size: 0.78rem;
         }
 
         .gridjs-th {
