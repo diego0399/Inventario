@@ -29,11 +29,12 @@ class Personas extends HTMLElement {
 
     // Crear Grid
     const grid = new window.gridjs.Grid({
-      columns: ['Nombre', 'Carnet', 'Departamento', 'Bienes'],
+      columns: ['Nombre', 'Carnet', 'Departamento','Telefono', 'Bienes'],
       data: empleados.map(emp => [
         emp.nombre,
         emp.carnet,
         emp.departamento,
+        emp.telefono && emp.telefono !== 'N/A' ? '2593 - ' + emp.telefono : '',
         gridjs.html(`
           <button 
             type="button"
@@ -153,7 +154,7 @@ class Personas extends HTMLElement {
         }
 
         .gridjs-table {
-          font-size: 0.95rem;
+          font-size: 0.85rem;
         }
 
         .gridjs-th {
