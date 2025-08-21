@@ -2,6 +2,7 @@
 import './src/components/home/home.js';
 import './src/components/departamentos/departamentos.js';
 import './src/components/personas/personas.js';
+import './src/components/productos/productos.js';
 import { routes } from './src/router/router.js';
 
 // Función global para navegar usando hash

@@ -12,4 +12,15 @@ export class ProductoDAO {
 
     return data;
   }
+
+  async listarproductos() {
+    const { data, error } = await supabase.from('vista_productos').select('*')
+
+    if (error) {
+      console.error('Error al obtener los productos:', error.message)
+      return []
+    }
+
+    return data
+  }
 }
