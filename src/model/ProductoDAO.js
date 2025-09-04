@@ -23,4 +23,15 @@ export class ProductoDAO {
 
     return data
   }
+
+ async listarCategorias() {
+    const { data, error } = await supabase.from('categoria').select('*');
+
+    if (error) {
+      console.error('Error al obtener las categorias:', error.message);
+      return [];
+    }
+
+    return data;
+  }
 }
