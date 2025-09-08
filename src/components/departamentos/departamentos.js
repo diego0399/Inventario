@@ -1,4 +1,4 @@
-import { UsuarioController } from '../../controller/UsuarioController.js';
+import { UsuarioController } from "../../controller/UsuarioController.js";
 
 class Departamentos extends HTMLElement {
   constructor() {
@@ -10,13 +10,13 @@ class Departamentos extends HTMLElement {
     this.controller = new UsuarioController(this); // Instancia controller
 
     // Botón regresar
-    this.querySelector('#btnRegresar').addEventListener('click', () => {
-      window.location.hash = '/';
+    this.querySelector("#btnRegresar").addEventListener("click", () => {
+      window.location.hash = "/";
     });
 
     // Limpiar modal empleados al cerrarlo
-    this.querySelector('#empleados').addEventListener('hidden.bs.modal', () => {
-      this.querySelector('#listaEmpleados').innerHTML = '';
+    this.querySelector("#empleados").addEventListener("hidden.bs.modal", () => {
+      this.querySelector("#listaEmpleados").innerHTML = "";
     });
 
     // Cargar departamentos
@@ -25,43 +25,43 @@ class Departamentos extends HTMLElement {
 
   // 📌 Renderiza departamentos en tabla Grid.js
   listarDepartamentos(departamentos) {
-    const tabla = this.querySelector('#tabla');
+    const tabla = this.querySelector("#tabla");
 
     if (!departamentos?.length) {
-      tabla.innerHTML = '<p>No hay departamentos disponibles.</p>';
+      tabla.innerHTML = "<p>No hay departamentos disponibles.</p>";
       return;
     }
 
     // Crear Grid
     const grid = new window.gridjs.Grid({
-      columns: ['Código', 'Nombre', 'Empleados'],
-      data: departamentos.map(dep => [
+      columns: ["Código", "Nombre", "Empleados"],
+      data: departamentos.map((dep) => [
         dep.codigo,
         dep.departamento,
         gridjs.html(`
           <button 
             type="button"
-            title="${dep.empleados} empleado(s)" 
+            title="${dep.total} empleado(s)" 
             class="btn btn-sm btn-primary ver-empleados d-flex align-items-center gap-1"
             data-dep-id="${dep.id}">
-            <i class="bi bi-eye-fill"></i> Ver (${dep.empleados})
+            <i class="bi bi-eye-fill"></i> Ver (${dep.total})
           </button>
-        `)
+        `),
       ]),
       search: true,
       pagination: { enabled: true, limit: 5 },
       sort: true,
       className: {
-        table: 'table table-hover table-striped align-middle',
-        tr: 'gridjs-row-clickable'
+        table: "table table-hover table-striped align-middle",
+        tr: "gridjs-row-clickable",
       },
       language: {
-        search: { placeholder: 'Buscar...' },
+        search: { placeholder: "Buscar..." },
         pagination: {
-          previous: 'Anterior',
-          next: 'Siguiente',
-          showing: 'Mostrando',
-          results: () => 'registros',
+          previous: "Anterior",
+          next: "Siguiente",
+          showing: "Mostrando",
+          results: () => "registros",
         },
       },
     });
@@ -69,27 +69,30 @@ class Departamentos extends HTMLElement {
     grid.render(tabla);
 
     // Delegación de eventos para botones y filas
-    tabla.addEventListener('click', async (e) => {
-      const boton = e.target.closest('.ver-empleados');
-      const fila = e.target.closest('tr');
+    tabla.addEventListener("click", async (e) => {
+      const boton = e.target.closest(".ver-empleados");
+      const fila = e.target.closest("tr");
 
       // Ver empleados
       if (boton) {
         e.stopPropagation();
-        const id = Number(boton.getAttribute('data-dep-id'));
-        const departamento = departamentos.find(dep => dep.id === id);
-        const empleados = await this.controller.obtenerEmpleadosPorDepartamento(id);
-        this.querySelector('#empleadosLabel').textContent = departamento?.departamento || 'Empleados';
+        const id = Number(boton.getAttribute("data-dep-id"));
+        const departamento = departamentos.find((dep) => dep.id === id);
+        const empleados = await this.controller.obtenerEmpleadosPorDepartamento(
+          id
+        );
+        this.querySelector("#empleadosLabel").textContent =
+          departamento?.departamento || "Empleados";
         return this.mostrarEmpleadosModal(empleados);
       }
 
       // Detalle departamento
-      if (fila && fila.tagName === 'TR') {
-        const botonEnFila = fila.querySelector('.ver-empleados');
+      if (fila && fila.tagName === "TR") {
+        const botonEnFila = fila.querySelector(".ver-empleados");
         if (!botonEnFila) return;
 
-        const id = Number(botonEnFila.getAttribute('data-dep-id'));
-        const departamento = departamentos.find(dep => dep.id === id);
+        const id = Number(botonEnFila.getAttribute("data-dep-id"));
+        const departamento = departamentos.find((dep) => dep.id === id);
         if (departamento) {
           this.mostrarModalDepartamento(departamento);
         }
@@ -99,31 +102,34 @@ class Departamentos extends HTMLElement {
 
   // 📍 Modal detalle de departamento
   mostrarModalDepartamento(departamento) {
-    this.querySelector('#modalCod').textContent = departamento.codigo;
-    this.querySelector('#modalNombre').textContent = departamento.departamento;
+    this.querySelector("#modalCod").textContent = departamento.codigo;
+    this.querySelector("#modalNombre").textContent = departamento.departamento;
 
-    const modal = new bootstrap.Modal(this.querySelector('#miModal'));
+    const modal = new bootstrap.Modal(this.querySelector("#miModal"));
     modal.show();
   }
 
   // 👥 Modal empleados del departamento
   mostrarEmpleadosModal(empleados) {
-    const lista = this.querySelector('#listaEmpleados');
-    lista.innerHTML = '';
+    const lista = this.querySelector("#listaEmpleados");
+    lista.innerHTML = "";
 
     if (!empleados?.length) {
-      lista.innerHTML = '<li class="list-group-item">No hay empleados registrados.</li>';
+      lista.innerHTML =
+        '<li class="list-group-item">No hay empleados registrados.</li>';
     } else {
-      empleados.forEach(emp => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        const h6 = emp.puesto ? ` - <h6 class="d-inline">${emp.puesto}</h6>` : '';
+      empleados.forEach((emp) => {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        const h6 = emp.puesto
+          ? ` - <h6 class="d-inline">${emp.puesto}</h6>`
+          : "";
 
-        li.innerHTML = `${emp.nombre}${h6} - ${emp.carnet}`;
+        li.innerHTML = `${emp.name}${h6} - ${emp.carnet}`;
         lista.appendChild(li);
       });
     }
-    const modal = new bootstrap.Modal(this.querySelector('#empleados'));
+    const modal = new bootstrap.Modal(this.querySelector("#empleados"));
     modal.show();
   }
 
@@ -229,4 +235,4 @@ class Departamentos extends HTMLElement {
   }
 }
 
-customElements.define('departamentos-component', Departamentos);
+customElements.define("departamentos-component", Departamentos);

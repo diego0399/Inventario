@@ -1,4 +1,4 @@
-import { UsuarioController } from '../../controller/UsuarioController.js';
+import { UsuarioController } from "../../controller/UsuarioController.js";
 
 class Personas extends HTMLElement {
   constructor() {
@@ -10,8 +10,8 @@ class Personas extends HTMLElement {
     this.controller = new UsuarioController(this); // INSTANCIA CONTROLLER
 
     // Botón regresar
-    this.querySelector('#btnRegresar').addEventListener('click', () => {
-      window.location.hash = '/';
+    this.querySelector("#btnRegresar").addEventListener("click", () => {
+      window.location.hash = "/";
     });
 
     // Cargar empleados
@@ -20,21 +20,21 @@ class Personas extends HTMLElement {
 
   // 📌 Renderiza empleados en tabla Grid.js
   listarEmpleados(empleados) {
-    const tabla = this.querySelector('#tabla');
+    const tabla = this.querySelector("#tabla");
 
     if (!empleados?.length) {
-      tabla.innerHTML = '<p>No hay empleados disponibles.</p>';
+      tabla.innerHTML = "<p>No hay empleados disponibles.</p>";
       return;
     }
 
     // Crear Grid
     const grid = new window.gridjs.Grid({
-      columns: ['Nombre', 'Carnet', 'Departamento','Telefono', 'Bienes'],
-      data: empleados.map(emp => [
-        emp.nombre,
+      columns: ["Nombre", "Carnet", "Departamento", "Telefono", "Bienes"],
+      data: empleados.map((emp) => [
+        emp.name,
         emp.carnet,
         emp.departamento,
-        emp.telefono && emp.telefono !== 'N/A' ? '2593 - ' + emp.telefono : '',
+        emp.telefono && emp.telefono !== "N/A" ? "2593 - " + emp.telefono : "",
         gridjs.html(`
           <button 
             type="button"
@@ -43,22 +43,22 @@ class Personas extends HTMLElement {
             data-emp-id="${emp.id}">
             <i class="bi bi-eye-fill"></i> Ver
           </button>
-        `)
+        `),
       ]),
       search: true,
       pagination: { enabled: true, limit: 5 },
       sort: true,
       className: {
-        table: 'table table-striped table-hover align-middle',
-        tr: 'gridjs-row-clickable',
+        table: "table table-striped table-hover align-middle",
+        tr: "gridjs-row-clickable",
       },
       language: {
-        search: { placeholder: 'Buscar...' },
+        search: { placeholder: "Buscar..." },
         pagination: {
-          previous: 'Anterior',
-          next: 'Siguiente',
-          showing: 'Mostrando',
-          results: () => 'registros',
+          previous: "Anterior",
+          next: "Siguiente",
+          showing: "Mostrando",
+          results: () => "registros",
         },
       },
     });
@@ -66,27 +66,28 @@ class Personas extends HTMLElement {
     grid.render(tabla);
 
     // Delegación de eventos
-    tabla.addEventListener('click',async (e) => {
-      const boton = e.target.closest('.ver-empleado');
-      const fila = e.target.closest('tr');
+    tabla.addEventListener("click", async (e) => {
+      const boton = e.target.closest(".ver-empleado");
+      const fila = e.target.closest("tr");
 
       // Ver bienes
       if (boton) {
         e.stopPropagation();
-        const id = Number(boton.getAttribute('data-emp-id')); // ✅ Correcto
-        const empleado = empleados.find(emp => emp.id === id);
+        const id = Number(boton.getAttribute("data-emp-id")); // ✅ Correcto
+        const empleado = empleados.find((emp) => emp.id === id);
         console.log(id);
         const bienes = await this.controller.obtenerProductosEmpleado(id);
-        this.querySelector('#productosLabel').textContent = empleado?.nombre || 'Bienes';
+        this.querySelector("#productosLabel").textContent =
+          empleado?.nombre || "Bienes";
         return this.mostrarEmpleadosProductosModal(bienes);
       }
 
-      if (fila && fila.tagName === 'TR') {
-        const botonEnFila = fila.querySelector('.ver-empleado');
+      if (fila && fila.tagName === "TR") {
+        const botonEnFila = fila.querySelector(".ver-empleado");
         if (!botonEnFila) return;
 
-        const id = Number(botonEnFila.getAttribute('data-emp-id'));
-        const empleado = empleados.find(emp => emp.id === id);
+        const id = Number(botonEnFila.getAttribute("data-emp-id"));
+        const empleado = empleados.find((emp) => emp.id === id);
         if (empleado) this.mostrarModalEmpleado(empleado);
       }
     });
@@ -94,31 +95,33 @@ class Personas extends HTMLElement {
 
   // 📍 Modal detalle del empleado
   mostrarModalEmpleado(empleado) {
-    this.querySelector('#modalNombre').textContent = empleado.nombre;
-    this.querySelector('#modalDepartamento').textContent = empleado.departamento;
-    this.querySelector('#modalCarnet').textContent = empleado.carnet;
+    this.querySelector("#modalNombre").textContent = empleado.nombre;
+    this.querySelector("#modalDepartamento").textContent =
+      empleado.departamento;
+    this.querySelector("#modalCarnet").textContent = empleado.carnet;
 
-    const modal = new bootstrap.Modal(this.querySelector('#miModal'));
+    const modal = new bootstrap.Modal(this.querySelector("#miModal"));
     modal.show();
   }
 
   // 👥 Modal empleados del departamento
   mostrarEmpleadosProductosModal(bienes) {
-    const lista = this.querySelector('#listaproductos');
-    lista.innerHTML = '';
+    const lista = this.querySelector("#listaproductos");
+    lista.innerHTML = "";
 
     if (!bienes?.length) {
-      lista.innerHTML = '<li class="list-group-item">No hay bienes asignados.</li>';
+      lista.innerHTML =
+        '<li class="list-group-item">No hay bienes asignados.</li>';
     } else {
-      bienes.forEach(pro => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
+      bienes.forEach((pro) => {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
         li.textContent = `${pro.inventario} - ${pro.categoria}`;
         lista.appendChild(li);
       });
     }
 
-    const modal = new bootstrap.Modal(this.querySelector('#productos'));
+    const modal = new bootstrap.Modal(this.querySelector("#productos"));
     modal.show();
   }
 
@@ -227,4 +230,4 @@ class Personas extends HTMLElement {
   }
 }
 
-customElements.define('personas-component', Personas);
+customElements.define("personas-component", Personas);

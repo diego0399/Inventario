@@ -1,5 +1,5 @@
-import { ProductoDAO } from "../model/ProductoDAO.js";
-import { UsuarioDAO } from "../model/UsuarioDAO.js";
+import { ProductoDAO } from "../model/Producto/ProductoDAO.js";
+import { UsuarioDAO } from "../model/Persona/UsuarioDAO.js";
 
 // Clase controlador, coordina entre modelo y vista (parte C del MVC)
 export class ProductoController {
